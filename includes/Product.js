@@ -1,4 +1,4 @@
-class ProductControllerrrr {
+class ProductController {
   constructor(connection) {
     this.connection = connection;
   }
@@ -8,7 +8,7 @@ class ProductControllerrrr {
   }
 
   getList() {
-    return this.getAllSongs().then(
+    return this.getAllItems().then(
       data => data.map(item => {
         return {
           name: item.product_name,
@@ -24,10 +24,24 @@ class ProductControllerrrr {
   updateInventory(id, quantity) {
     return this.connection
       .queryAsync("UPDATE products SET quantity = ? WHERE id = ?", [id, quantity])
-      .then( () => {
-      	this.connection.end();
-      	console.log("Inventory updated");
+      .then(() => {
+        this.connection.end();
+        console.log("Inventory updated");
       })
-      .catch(err => {throw err;});
+      .catch(err => { throw err; });
+  }
+
+  viewForSale() {
+    console.log("================");
+    console.log(" Items For Sale ");
+    console.log("================");
+    return this.getAllItems()
+      .then(data =>
+        data.forEach(
+          item => console.log(item.id + " " + item.product_name + " $" + item.price)
+        )
+      );
   }
 }
+
+module.exports = ProductController;
